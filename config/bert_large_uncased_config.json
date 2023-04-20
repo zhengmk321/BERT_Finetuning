@@ -14,5 +14,5 @@
   "tokenizer": "wordpiece",
   "type_vocab_size": 2,
   "vocab_size": 30522,
-  "vocab_file": "/lus/theta-fs0/projects/SuperBERT/datasets/download/google_pretrained_weights/uncased_L-24_H-1024_A-16/vocab.txt"
+  "vocab_file": "/work/09308/zhengmk/BERT_data/google_pretrained_weights/uncased_L-12_H-768_A-12/vocab.txt"
 }

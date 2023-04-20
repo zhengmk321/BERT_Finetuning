@@ -1,12 +1,12 @@
 #!/bin/bash
 
-DATA_PATH="data"
+DATA_PATH="/work/09308/zhengmk/BERT_data"
 INCLUDE_BOOKS=true
 N_PROCESSES=4
 DOWNLOAD=false
 FORMAT=false
 ENCODE=false
-ENCODE_TYPE="roberta"
+ENCODE_TYPE="bert"
 
 while [[ "$1" == -* ]]; do
     case "$1" in
@@ -54,7 +54,6 @@ while [[ "$1" == -* ]]; do
     shift
 done
 
-
 if [ "$DOWNLOAD" == true ]; then
     DOWNLOAD_PATH=$DATA_PATH/download
 else
@@ -78,11 +77,11 @@ echo "    num_processes=$N_PROCESSES"
 
 
 if [ "$DOWNLOAD" == true ]; then
-    python utils/download.py --dir $DOWNLOAD_PATH --datasets wikicorpus
-    python utils/download.py --dir $DOWNLOAD_PATH --datasets squad
-    python utils/download.py --dir $DOWNLOAD_PATH --datasets weights
+    # python ../utils/download.py --dir $DOWNLOAD_PATH --datasets wikicorpus
+    python ../utils/download.py --dir $DOWNLOAD_PATH --datasets squad
+    python ../utils/download.py --dir $DOWNLOAD_PATH --datasets weights
     if [ "$INCLUDE_BOOKS" == true ]; then
-        python utils/download.py --dir $DOWNLOAD_PATH --datasets bookscorpus
+        python ../utils/download.py --dir $DOWNLOAD_PATH --datasets bookscorpus
     fi
 fi
 
@@ -90,18 +89,18 @@ fi
 if [ "$FORMAT" == true ]; then
     # Extract articles from wikicorpus xml file into files of 100M each
     # This allows us to parallelize next step
-    mkdir -p $DOWNLOAD_PATH/wikicorpus/data
-    wikiextractor $DOWNLOAD_PATH/wikicorpus/wikicorpus_en.xml --bytes 25M \
-        --processes $N_PROCESSES --output $DOWNLOAD_PATH/wikicorpus/data
+    # mkdir -p $DOWNLOAD_PATH/wikicorpus/data
+    # wikiextractor $DOWNLOAD_PATH/wikicorpus/wikicorpus_en.xml --bytes 25M \
+    #     --processes $N_PROCESSES --output $DOWNLOAD_PATH/wikicorpus/data
 
     # Extract the data into text files where each line is a sentence and each
     # article is separated by a blank line. To prevent massive files,
     # articles/books are distributed across shards.
-    python utils/format.py --dataset wikicorpus --processes $N_PROCESSES \
+    python ../utils/format.py --dataset wikicorpus --processes $N_PROCESSES \
         --input_dir $DOWNLOAD_PATH/wikicorpus/data \
         --output_dir $FORMAT_PATH/wikicorpus --shards 256
     if [ "$INCLUDE_BOOKS" == true ]; then
-        python utils/format.py --dataset bookscorpus --processes $N_PROCESSES \
+        python ../utils/format.py --dataset bookscorpus --processes $N_PROCESSES \
             --input_dir $DOWNLOAD_PATH/bookscorpus/data \
             --output_dir $FORMAT_PATH/bookscorpus --shards 256
     fi
@@ -118,7 +117,7 @@ if [ "$ENCODE" == true ]; then
         #     hours to encode using 16 threads.
         #   - The output files are approximately half the size of the input
         #     file (because the words are encoded from a string to a single int)
-        python utils/encode_pretraining_data.py \
+        python ../utils/encode_pretraining_data.py \
             --input_dir $FORMAT_PATH --output_dir $ENCODED_PATH \
             --vocab $VOCAB_FILE --max_seq_len 512 --short_seq_prob 0.1 \
             --next_seq_prob 0.0 --processes $N_PROCESSES
@@ -130,11 +129,11 @@ if [ "$ENCODE" == true ]; then
         # BERT Encoding:
         #   - next sequence prediction
         #   - two training phases (128 and 512 length sequences)
-        python utils/encode_pretraining_data.py \
+        python ../utils/encode_pretraining_data.py \
             --input_dir $FORMAT_PATH --output_dir $ENCODED_PATH \
             --vocab $VOCAB_FILE --max_seq_len 128 --short_seq_prob 0.1 \
             --next_seq_prob 0.5 --processes $N_PROCESSES
-        python utils/encode_pretraining_data.py \
+        python ../utils/encode_pretraining_data.py \
             --input_dir $FORMAT_PATH --output_dir $ENCODED_PATH \
             --vocab $VOCAB_FILE --max_seq_len 512 --short_seq_prob 0 \
             --next_seq_prob 0.5 --processes $N_PROCESSES

@@ -50,6 +50,8 @@ class DatasetDownloader():
             else:
                 response = urllib.request.urlopen(url)
                 with open(dst_path, "wb") as handle:
+                    temp=response.read()
+                    # print(f"\n{temp}\n")
                     handle.write(response.read())
 
     def extract(self):
@@ -249,6 +251,7 @@ if __name__ == '__main__':
     print('Downloading {} to "{}"'.format(args.datasets, args.dir))
 
     downloader = Downloader(args.dir)
+
     for dataset in args.datasets:
         downloader.download(dataset)
 

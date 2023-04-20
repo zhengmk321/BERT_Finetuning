@@ -1,16 +1,16 @@
 #!/bin/bash
 
-MODEL_CHECKPOINT=${1:-"results/bert_pretraining/ckpt_8601.pt"}
-OUTPUT_DIR=${2:-"results/bert_pretraining"}
-CONFIG_FILE=${3:-"config/bert_large_uncased_config.json"}
+MODEL_CHECKPOINT=${1:-"/work/09308/zhengmk/BERT_pretrained_model/ckpt_8601.pt"}
+OUTPUT_DIR=${2:-"../results/bert_pretraining/squad"}
+CONFIG_FILE=${3:-"../config/bert_large_uncased_config.json"}
 
-DATA_DIR="/lus/theta-fs0/projects/SuperBERT/datasets/download"
+DATA_DIR="/work/09308/zhengmk/BERT_data/"
 SQUAD_DIR="$DATA_DIR/squad/v1.1"
 
 BERT_MODEL="bert-large-uncased"
 
-NGPUS=1
-BATCH_SIZE=4
+NGPUS=4
+BATCH_SIZE=6
 
 LOGFILE="$OUTPUT_DIR/squad_log.txt"
 
@@ -20,7 +20,7 @@ if [ ! -d "$OUTPUT_DIR" ]; then
 	echo "ERROR: unable to make $OUTPUT_DIR"
 fi
 
-CMD="python -m torch.distributed.launch --nproc_per_node=$NGPUS run_squad.py"
+CMD="torchrun --nproc_per_node=$NGPUS ../run_squad.py"
 
 CMD+=" --init_checkpoint=$MODEL_CHECKPOINT "
 
