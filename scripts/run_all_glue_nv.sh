@@ -22,7 +22,6 @@ else
   num_gpu_per_node='1'
 fi
 total_num_gpus=4
-num_nodes=$(($total_num_gpus/$num_gpu_per_node))
 
 # for first_dir in $ckpt_dir; do
     for sec_dir in $ckpt_dir; do
@@ -50,7 +49,7 @@ num_nodes=$(($total_num_gpus/$num_gpu_per_node))
                 #     batch_size="16"
                 # fi
                 batch_size=16
-                CMD="./run_one_glue_nv.sh $task $FILE $num_nodes $num_gpu_per_node $batch_size $out_dir"
+                CMD="./run_one_glue_nv.sh $task $FILE  $num_gpu_per_node $batch_size $out_dir"
                 $CMD
             done
         done

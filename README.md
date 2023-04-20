@@ -81,6 +81,20 @@ See `python run_pretraining.py --help` for a full list of arguments and their de
 
 Note: these instructions are for PyTorch 1.9 and later.
 
+### **4. Fine-tuning**
+To run one specific GLUE test (e.g. CoLA, STS-B, MNLI, QNLI, QQP, SST-2, MRPC, RTE), use `run_one_glue_nv.sh`:
+```
+cd ./scripts
+sh run_one_glue_nv.sh GLUE_TASK CKPT_FILE NUM_NODES BATCH_SIZE OUT_DIR
+```
+To run all GLUE tests, use `run_all_glue_nv.sh`:
+```
+cd ./scripts
+sh run_all_glue_nv.sh
+```
+To collect all SQuAD and GLUE results, use `collect_metrics.py`.
+
+
 #### Single-Node Multi-GPU Training
 ```
 $ python -m torch.distributed.run --standalone --nnodes=1 --nproc_per_node=$GPUS_PER_NODE run_pretraining.py --config_file $PHASE1_CONFIG --input_dir $PHASE1_DATA --output_dir $OUTPUT_DIR

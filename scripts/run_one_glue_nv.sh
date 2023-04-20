@@ -20,22 +20,21 @@ set -e
 BERT_PREP_WORKING_DIR="/work/09308/zhengmk/BERT_data"
 glue_task_name=${1:-"CoLA"}
 init_checkpoint=${2:-"/work/09308/zhengmk/BERT_pretrained_model/ckpt_8601.pt"}
-num_nodes=${3:-"2"}
-num_gpu=${4:-"4"} # # of gpus per node
-batch_size=${5:-"16"}
-out_dir=${6:-"../results/bert_pretraining/GLUE"}
-data_dir=${7:-"$BERT_PREP_WORKING_DIR/download/glue/$glue_task_name/"}
-vocab_file=${8:-"/work/09308/zhengmk/BERT_data/google_pretrained_weights/uncased_L-12_H-768_A-12/vocab.txt"}
-config_file=${9:-"../config/bert_large_uncased_config.json"}
+num_gpu=${3:-"4"} # # of gpus per node
+batch_size=${4:-"16"}
+out_dir=${5:-"../results/bert_pretraining/GLUE"}
+data_dir=${6:-"$BERT_PREP_WORKING_DIR/download/glue/$glue_task_name/"}
+vocab_file=${7:-"/work/09308/zhengmk/BERT_data/google_pretrained_weights/uncased_L-12_H-768_A-12/vocab.txt"}
+config_file=${8:-"../config/bert_large_uncased_config.json"}
 task_name="${glue_task_name,,}"
-gradient_accumulation_steps=${10:-"1"}
-learning_rate=${11:-"2.4e-5"} # Pls note that some lr can lead to CoLA mcc goes to 0
-warmup_proportion=${12:-"0.1"}
-epochs=${13:-"3"} # For MRPC, change it to 5.
-max_steps=${14:-"-1.0"}
-precision=${15:-"fp16"}
-seed=${16:-"0"}
-mode=${17:-"train eval"}
+gradient_accumulation_steps=${9:-"1"}
+learning_rate=${10:-"2.4e-5"} # Pls note that some lr can lead to CoLA mcc goes to 0
+warmup_proportion=${11:-"0.1"}
+epochs=${12:-"3"} # For MRPC, change it to 5.
+max_steps=${13:-"-1.0"}
+precision=${14:-"fp16"}
+seed=${15:-"0"}
+mode=${16:-"train eval"}
 
 mkdir -p $out_dir
 
